@@ -1,4 +1,6 @@
 import { Exercise, EXERCISE_DB } from '../models/ExerciseData';
+import { PermissionHelper } from '../services/PermissionHelper';
+import common from '@ohos.app.ability.common';
 
 @Component
 export struct SelectionView {
@@ -7,6 +9,13 @@ export struct SelectionView {
 
   private swiperController: SwiperController = new SwiperController();
   @State currentIndex: number = 0;
+
+  private permission_context = getContext(this) as common.UIAbilityContext;
+
+  async aboutToAppear() {
+
+    const granted: boolean = await PermissionHelper.requestHealthPermission(this.permission_context);
+  }
 
   build() {
     Stack() {

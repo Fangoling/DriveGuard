@@ -1,8 +1,6 @@
-import common from '@ohos.app.ability.common';
 import { RepetitionLogic, IRecorderUI } from '../services/RepetitionLogic';
 import { SensorFrame } from '../SensorData';
 import { FileUtils } from '../services/FileUtils';
-import { PermissionHelper } from '../services/PermissionHelper';
 
 class BaselineDelegate implements IRecorderUI {
   private owner: BaselineView;
@@ -33,14 +31,11 @@ export struct BaselineView {
 
   onBaselineComplete: () => void = () => {};
 
-  private permission_context = getContext(this) as common.UIAbilityContext;
   private logic: RepetitionLogic | null = null;
   private settings: RenderingContextSettings = new RenderingContextSettings(true);
   private context: CanvasRenderingContext2D = new CanvasRenderingContext2D(this.settings);
 
   async aboutToAppear() {
-
-    const granted: boolean =  await PermissionHelper.requestHealthPermission(this.permission_context);
 
     this.logic = new RepetitionLogic(new BaselineDelegate(this));
     this.logic.initSensors();

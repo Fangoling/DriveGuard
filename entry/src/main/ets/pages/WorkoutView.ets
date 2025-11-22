@@ -19,7 +19,7 @@ class WorkoutDelegate implements IRecorderUI {
     this.owner.isWorkoutActive = false;
   }
 }
-
+@Entry
 @Component
 export struct WorkoutView {
   @State isWorkoutActive: boolean = false;
