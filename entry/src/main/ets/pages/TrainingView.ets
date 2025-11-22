@@ -1,4 +1,5 @@
 import { Exercise, EXERCISE_DB } from '../models/ExerciseData';
+import router from '@ohos.router';
 
 @Component
 export struct TrainingView {

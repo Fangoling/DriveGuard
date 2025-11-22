@@ -1,5 +1,6 @@
 import { Exercise, EXERCISE_DB } from '../models/ExerciseData';
 import { SelectionView } from './SelectionView';
+import { SetCompleteView } from './SetCompleteView';
 import { TrainingView } from './TrainingView';
 
 @Entry
@@ -18,11 +19,12 @@ struct Index {
           }
         })
       } else {
-        SelectionView({
-          onExerciseSelect: (exercise: Exercise) => {
-            this.selectedExercise = exercise;
-          }
-        })
+        SetCompleteView()
+        // SelectionView({
+        //   onExerciseSelect: (exercise: Exercise) => {
+        //     this.selectedExercise = exercise;
+        //   }
+        // })
       }
     }
     .width('100%')
