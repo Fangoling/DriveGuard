@@ -15,9 +15,9 @@ export struct SelectionView {
         ForEach(EXERCISE_DB, (item: Exercise) => {
           Column({ space: 5 }) {
 
-          Image(item.image)
-            .width(70)
-            .height(70)
+            Image(item.image)
+              .width(70)
+              .height(70)
 
             Text(item.name)
               .fontSize(18)
@@ -46,24 +46,24 @@ export struct SelectionView {
       }, false)
       .loop(true)
 
-        Text('SELECT MOVEMENT')
-          .fontSize(10)
-          .fontColor('#64748B')
-          .fontWeight(FontWeight.Bold)
-          .letterSpacing(1)
-          .position({ x: '50%', y: 25 })
-          .translate({ x: '-50%' })
+      Text('SELECT MOVEMENT')
+        .fontSize(10)
+        .fontColor('#64748B')
+        .fontWeight(FontWeight.Bold)
+        .letterSpacing(1)
+        .position({ x: '50%', y: 25 })
+        .translate({ x: '-50%' })
 
-        Button('Select')
-          .width(130)
-          .height(40)
-          .backgroundColor('#2563EB')
-          .fontSize(16)
-          .position({ x: '50%', y: '85%' })
-          .translate({ x: '-50%', y: '-100%' })
-          .onClick(() => {
-            this.onExerciseSelect(EXERCISE_DB[this.currentIndex]);
-          })
+      Button('Select')
+        .width(130)
+        .height(40)
+        .backgroundColor('#2563EB')
+        .fontSize(16)
+        .position({ x: '50%', y: '85%' })
+        .translate({ x: '-50%', y: '-100%' })
+        .onClick(() => {
+          this.onExerciseSelect(EXERCISE_DB[this.currentIndex]);
+        })
 
       Circle()
         .width('100%').height('100%')

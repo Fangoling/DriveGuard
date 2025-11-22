@@ -5,6 +5,7 @@ import router from '@ohos.router';
 export struct TrainingView {
   @Prop exercise: Exercise;
   onBack: () => void = () => {};
+  onStartBaseline: () => void = () => {};
 
   build() {
     Stack({ alignContent: Alignment.Center }) {
@@ -37,6 +38,7 @@ export struct TrainingView {
         .height(48)
         .onClick(() => {
           console.info("Recording started for " + this.exercise.name);
+          this.onStartBaseline(); // Trigger navigation
         })
 
       }
