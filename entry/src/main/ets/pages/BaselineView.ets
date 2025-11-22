@@ -1,6 +1,8 @@
+import common from '@ohos.app.ability.common';
 import { RepetitionLogic, IRecorderUI } from '../services/RepetitionLogic';
 import { SensorFrame } from '../SensorData';
 import { FileUtils } from '../services/FileUtils';
+import router from '@ohos.router';
 
 class BaselineDelegate implements IRecorderUI {
   private owner: BaselineView;
@@ -21,22 +23,20 @@ class BaselineDelegate implements IRecorderUI {
   }
 }
 
+@Entry
 @Component
-export struct BaselineView {
+struct BaselineView {
   @State isRecording: boolean = false;
   @State statusMessage: string = "Ready to Record Baseline";
   @State statusColor: Color = Color.Gray;
   @State durationText: string = "0.00s";
   @State saveResult: string = "";
 
-  onBaselineComplete: () => void = () => {};
-
   private logic: RepetitionLogic | null = null;
   private settings: RenderingContextSettings = new RenderingContextSettings(true);
   private context: CanvasRenderingContext2D = new CanvasRenderingContext2D(this.settings);
 
-  async aboutToAppear() {
-
+  aboutToAppear() {
     this.logic = new RepetitionLogic(new BaselineDelegate(this));
     this.logic.initSensors();
   }
@@ -48,8 +48,8 @@ export struct BaselineView {
   toggleRec() {
     if (this.isRecording) {
       this.logic?.stopSession();
-      // Assume complete when stopping
-      this.onBaselineComplete();
+      // Assume complete when stopping manually
+      router.pushUrl({ url: 'pages/WorkoutView' });
     } else {
       this.saveResult = "";
       // FALSE = Single Rep Mode
@@ -60,12 +60,11 @@ export struct BaselineView {
 
   build() {
     Column() {
-      Text("BASELINE CREATING...")
-        .fontSize(12).fontWeight(FontWeight.Bold).margin(20)
-        .padding({top: 5})
+      Text("CREATE BASELINE")
+        .fontSize(14).fontWeight(FontWeight.Bold).margin(20)
 
       Canvas(this.context)
-        .width('60%').height(80)
+        .width('60%').height(80).backgroundColor('#222')
         .onReady(() => this.logic?.setCanvasContext(this.context))
 
       Text(this.statusMessage).fontSize(14).fontColor(this.statusColor).margin(10)

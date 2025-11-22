@@ -1,5 +1,6 @@
 import { RepetitionLogic, IRecorderUI } from '../services/RepetitionLogic';
 import { SensorFrame } from '../SensorData';
+import router from '@ohos.router';
 
 class WorkoutDelegate implements IRecorderUI {
   private owner: WorkoutView;
@@ -19,15 +20,14 @@ class WorkoutDelegate implements IRecorderUI {
     this.owner.isWorkoutActive = false;
   }
 }
+
 @Entry
 @Component
-export struct WorkoutView {
+struct WorkoutView {
   @State isWorkoutActive: boolean = false;
   @State repCount: number = 0;
   @State statusMessage: string = "Ready to Workout";
   @State statusColor: Color = Color.Gray;
-
-  onFinishSet: () => void = () => {};
 
   private logic: RepetitionLogic | null = null;
   private settings: RenderingContextSettings = new RenderingContextSettings(true);
@@ -45,8 +45,8 @@ export struct WorkoutView {
   toggleWorkout() {
     if (this.isWorkoutActive) {
       this.logic?.stopSession();
-      // Trigger completion
-      this.onFinishSet();
+      // Go to set complete
+      router.pushUrl({ url: 'pages/SetCompleteView' });
     } else {
       this.repCount = 0; // Reset counter
       // TRUE = Continuous Mode
