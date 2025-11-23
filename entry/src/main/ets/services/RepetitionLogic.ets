@@ -15,6 +15,7 @@ export interface IRecorderUI {
 
 export class RepetitionLogic {
   private ui: IRecorderUI;
+  public currentExerciseName: string = "";
 
   // --- CONFIGURATION ---
   public isContinuousMode: boolean = false; // If true, restarts after rep finish
@@ -319,12 +320,16 @@ export class RepetitionLogic {
 
   saveRepetition(data: SensorFrame[]) {
     if(!this.isContinuousMode) {
-      const setReferenceResult = this.sensorDataParser.setReference(data);
+      const setReferenceResult = this.sensorDataParser.setReference(data, this.currentExerciseName);
       this.ui.onRepetitionResult(setReferenceResult)
       return;
     }
     const repResult = this.sensorDataParser.processRepData(data);
 
     this.ui.onRepetitionResult(repResult);
+  }
+
+  setExerciseName(exerciseName: string) {
+    this.currentExerciseName = exerciseName;
   }
 }

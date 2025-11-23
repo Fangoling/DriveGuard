@@ -1,7 +1,7 @@
 import { RepetitionLogic, IRecorderUI } from '../services/RepetitionLogic';
-import { SensorFrame } from '../SensorData';
 import router from '@ohos.router';
-import { FailureReason, RepResult } from '../services/SensorDataParser';
+import { RepResult } from '../services/SensorDataParser';
+import { FailureReason } from '../models/WorkoutModels'
 
 class WorkoutDelegate implements IRecorderUI {
   private owner: WorkoutView;

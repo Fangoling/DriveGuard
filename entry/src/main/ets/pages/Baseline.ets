@@ -1,10 +1,6 @@
-import common from '@ohos.app.ability.common';
 import { RepetitionLogic, IRecorderUI } from '../services/RepetitionLogic';
-import { SensorFrame } from '../SensorData';
-import { FileUtils } from '../services/FileUtils';
 import router from '@ohos.router';
 import { Exercise } from '../models/ExerciseData'; // Import Exercise for type safety
-import router from '@ohos.router';
 import { RepResult } from '../services/SensorDataParser';
 
 // Define the interface for the router parameters expected by this view
@@ -44,6 +40,7 @@ struct BaselineView {
   @State durationText: string = "0.00s";
   @State saveResult: string = "";
   @State calibrationResult: string = "";
+  @State exerciseName: string = "";
 
   private logic: RepetitionLogic | null = null;
   private settings: RenderingContextSettings = new RenderingContextSettings(true);
@@ -59,6 +56,8 @@ struct BaselineView {
 
     if (params) {
       routerParams = params as BaselineRouterParams;
+      this.exerciseName = routerParams.exercise.name;
+      this.logic.setExerciseName(this.exerciseName);
     }
 
     // Now ArkTS knows about the startRecording property
