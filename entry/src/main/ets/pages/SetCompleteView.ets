@@ -1,5 +1,6 @@
 import { SetCompleteData } from '../models/SetCompleteData';
 import router from '@ohos.router';
+import { SensorDataParser } from '../services/SensorDataParser';
 
 @Entry
 @Component
@@ -8,6 +9,14 @@ struct SetCompleteView {
     reps: 6,
     accuracyPercentage: 92,
     coachFeedback: "Tempo matched the Ghost Rep perfectly. Heart rate stable. Increase weight. This is a significantly longer feedback message to test the scrolling behavior on a small wearable screen. Ensure this text is long enough to exceed the available space.",
+  }
+  @State accuracy: number = 0;
+  @State reps: number = 0;
+
+  aboutToAppear(): void {
+    const sensorDataParser: SensorDataParser = SensorDataParser.getInstance();
+    this.accuracy = sensorDataParser.getAccuracy()
+    this.reps = sensorDataParser.getNumberOfReps()
   }
 
   build() {

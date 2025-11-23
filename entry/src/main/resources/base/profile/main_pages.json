@@ -2,7 +2,7 @@
   "src": [
     "pages/Index",
     "pages/TrainingView",
-    "pages/BaselineView",
+    "pages/Baseline",
     "pages/WorkoutView",
     "pages/SetCompleteView",
     "pages/TestAudioView"

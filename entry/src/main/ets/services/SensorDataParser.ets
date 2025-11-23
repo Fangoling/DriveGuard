@@ -1,5 +1,7 @@
 import { DTWUtils } from './DtwUtils'
 import { SensorFrame } from '../SensorData'
+import { LlmService } from './LlmService';
+import { WorkoutSet, FailureReason } from '../models/WorkoutModels';
 
 /**
  * Detailed analysis of the raw DTW computation.
@@ -21,26 +23,31 @@ export interface RepResult {
   avgHeartRate: number;
 }
 
-export enum FailureReason {
-  FORM_BAD = 'FORM_BAD',
-  TOO_FAST = 'TOO_FAST',
-  TOO_SLOW = 'TOO_SLOW',
-  TOO_SHORT = 'TOO_SHORT',  // Likely noise/bump
-  NO_REFERENCE = 'NO_REFERENCE',
-  HEARTRATE_LOW = 'HEARTRATE_LOW',
-  HEARTRATE_HIGH = 'HEARTRATE_HIGH',
-}
 
 export class SensorDataParser {
 
   private static instance: SensorDataParser;
-  private constructor() {}
+  protected setResult: RepResult[] =  []
+  protected workoutSet: WorkoutSet;
+  private constructor() {
+    this.workoutSet = {
+      name: "",
+      reps: 0,
+      perfect: 0,
+      failed: [],
+      heartRates: [],
+      durations: []
+    }
+  }
   public static getInstance(): SensorDataParser {
     if (!SensorDataParser.instance) {
       SensorDataParser.instance = new SensorDataParser();
     }
     return SensorDataParser.instance;
   }
+
+  protected readonly llmService: LlmService = new LlmService();
+
 
   protected referenceAcc: number[][] = [];
   protected referenceQuat: number[][] = [];
@@ -84,6 +91,10 @@ export class SensorDataParser {
     // 4. Calculate HeartRate
     const avgHeartRate = this.getAverageHeartRate(rep);
 
+    this.workoutSet.reps+=1;
+    this.workoutSet.heartRates.push(avgHeartRate);
+    this.workoutSet.durations.push(rep.length);
+
     // 4. Evaluate Failure Conditions
     // Priority: Form > Speed. If form is bad, speed doesn't matter.
     if (avgHeartRate > this.MAX_HEART_RATE) {
@@ -102,16 +113,23 @@ export class SensorDataParser {
       return this.createFailResult(FailureReason.TOO_SLOW, metrics.combinedScore, tempoRatio);
     }
 
-    // 5. Success!
-    return {
+    this.workoutSet.failed.push(undefined);
+    this.workoutSet.perfect += 1;
+
+    const result: RepResult = {
       isSuccessful: true,
       score: metrics.combinedScore,
       tempoRatio: tempoRatio,
       avgHeartRate: avgHeartRate
-    };
+    }
+    // 5. Success!
+    return result;
   }
 
-  setReference(input: SensorFrame[]): RepResult {
+  setReference(input: SensorFrame[], exerciseName: string): RepResult {
+    // reset the set result
+    this.resetWorkoutSet(exerciseName)
+
     const accArray = this.getAccArray(input)
     this.referenceAcc = this.processSignal(accArray);
     const quatArray = this.getQuatArray(input)
@@ -127,6 +145,28 @@ export class SensorDataParser {
       avgHeartRate: this.referenceHeartRate
     }
   }
+
+  getAccuracy() {
+    return this.workoutSet.perfect/this.workoutSet.reps;
+  }
+
+  getNumberOfReps() {
+    return this.workoutSet.reps;
+  }
+
+  requestFeedback() {
+    this.llmService.sendToChatGPT(this.workoutSet)
+  }
+
+  private resetWorkoutSet(exerciseName: string) {
+    this.workoutSet.name = exerciseName;
+    this.workoutSet.reps = 0;
+    this.workoutSet.perfect = 0;
+    this.workoutSet.heartRates = [];
+    this.workoutSet.failed = [];
+    this.workoutSet.durations = [];
+  }
+
 
   private computeDtw (input: SensorFrame[]): RepMetrics {
     const accArray = this.getAccArray(input)
@@ -145,6 +185,7 @@ export class SensorDataParser {
   }
 
   private createFailResult(reason: FailureReason, score: number = 0, tempo: number = 0, avgHeartRate: number = 0): RepResult {
+    this.workoutSet.failed.push(reason);
     return {
       isSuccessful: false,
       failureReason: reason,
