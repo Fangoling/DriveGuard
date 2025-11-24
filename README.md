@@ -1,4 +1,9 @@
 # GoldenRep
+
+<p align="center">
+  <strong>🥉 3rd Place — Huawei Track @ HackaTUM 2025</strong>
+</p>
+
 <p align="center">
 <img width="250" height="250" alt="image" src="https://github.com/user-attachments/assets/651984e3-d89d-4a8f-8dc2-6186d0c77581" />
 </p>
