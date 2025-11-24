@@ -15,3 +15,8 @@ GoldenRep combines Huawei watch sensors, on-device logic, and cloud-based AI to 
 - **Sensor Fusion**: We utilized the @ohos.sensor API to pull high-frequency data (20ms intervals) from the Accelerometer and Rotation Vector sensors, along with Heart Rate monitoring.
 - **Haptics**: We used @ohos.vibrator to give physical cues like a short pulse for "Start" and a longer vibration for "Success", so the user doesn't have to look at their wrist while lifting.- 
 - **Hybrid AI Architecture**: We implemented a hybrid approach where critical feedback (rep counting, form checks) happens locally on the watch using ArkTS for zero-latency, while complex pattern recognition is offloaded to an LLM via REST API to generate natural language coaching tips.
+
+## Demo
+Click here to watch the demo.
+
+[![Watch the demo](https://github.com/user-attachments/assets/004157d7-b627-4039-8f63-2952d0665baa)](https://youtu.be/kBMS_RdcD9M)
